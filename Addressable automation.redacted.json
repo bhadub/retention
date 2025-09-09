@@ -1,0 +1,290 @@
+{
+  "name": "Addressable automation",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        896,
+        96
+      ],
+      "id": "589a0028-c09e-4a8d-be15-45e0be00c772",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Situation: {{ $json.scenario_labels }}\nCustomer Name: {{ $json.full_name }}\nProduct: Addressable\nTone/Style: friendly and professional\n\nRules:\n- Stick to the example emails format\n- reference the relevant materials from the case studies, articles, blogs from www.addressable.io \n- Do not hallucinate\n- Do not mention the user company name\n\nExample:\n1. High Effort, Low Return\n\nDefinition: High engagement (≥1000 sec session, >10 AI queries), but improvement % ≤ 0.\n\nGoal: Acknowledge effort, offer campaign optimization help.\n\nSubject: Let’s turn your effort into better results 📈\n\nHi [Customer Name],\n\nWe’ve noticed you’ve been putting real effort into Addressable—exploring reports, building audiences, and running campaigns. That’s fantastic!\n\nBut it looks like your recent campaigns haven’t delivered the improvement you deserve. Often, just a few tweaks in targeting or setup can make a big difference.\n\nOur team would love to review your setup with you and share tailored tips to boost results. You can grab a time here: https://calendly.com/bhasker-theuptree/30min\n\nWe’re committed to helping you succeed with Addressable.\n\nBest,\nCustomer Success Team\n\n2. Created Audience, No Campaign\n\nDefinition: Users with >0 audiences but no campaigns (on- or off-platform).\n\nGoal: Encourage activation by launching the first campaign.\n\nSubject: You’ve built your audience—now let’s put it to work 🎯\n\nHi [Customer Name],\n\nGreat job creating your first audience in Addressable! That’s an important milestone.\n\nThe next step is turning that audience into a live campaign—this is where you’ll start seeing real impact. To make it easy, we’ve built a simple workflow that takes just minutes.\n\n👉 Launch your first campaign with our help\n\nWe’d love to walk you through it personally and help you get results faster.\n\nWarmly,\nCustomer Success Team\n\n3. Off-platform Missing\n\nDefinition: Users with no off-platform campaigns.\n\nGoal: Educate them on the value of tracking conversions beyond clicks.\n\nSubject: Unlock more value with off-platform campaigns 🚀\n\nHi [Customer Name],\n\nWe see you’ve been running campaigns on-platform with Addressable—great work! To take it further, we recommend setting up off-platform campaigns.\n\nThis lets you track conversions like wallet connections and purchases, so you see the true business impact of your campaigns—not just clicks and impressions.\n\nIt’s simple to get started, and we’d be happy to walk you through the setup. Book a quick time here: https://calendly.com/bhasker-theuptree/30min\n\nLet’s help you capture the full value of Addressable.\n\nCheers,\nCustomer Success Team\n\n4. Low Adoption\n\nDefinition: Users with <5 audiences or <10 segments.\n\nGoal: Encourage exploration of more features to build habit and value.\n\nSubject: Discover more ways to use Addressable 🌟\n\nHi [Customer Name],\n\nThanks for getting started with Addressable! We noticed you’ve tried out a few features already, which is awesome.\n\nTo help you get even more value, here are some quick wins our customers love:\n\nBuild a few more audiences to test targeting ideas\n\nCreate additional segments to refine performance\n\nExplore the reporting dashboards to track results\n\nNeed a hand? We’d be happy to walk you through new features and share best practices. Just book a quick session here: https://calendly.com/bhasker-theuptree/30min\n\nWe’re excited to help you get the most from Addressable!\n\nBest,\nCustomer Success Team",
+        "options": {
+          "systemMessage": "You are a customer success manager writing a concise, empathetic outreach email to a customer meeting all of the following criteria:\n\nYou are an AI assistant specialized in customer retention and churn prevention.\nYour task is to write personalized, strategic, and empathetic emails to customers showing early or ongoing signs of disengagement or friction with the product.\n\nYour tone should be helpful, supportive, and empathetic—not pushy. The primary goal is to re-engage the customer by showing them that their challenges are understood, offering clear next steps, and reinforcing the product’s value.\n\nCore Principles\n\nContext-Aware: Use the customer’s churn situation label (e.g., High Effort, Low Return, Created Audience, No Campaign, Off-platform Missing, Low Adoption) to personalize the email.\n\nHighlight value: Remind the customer of the benefit of Addressable, focusing on the gap indicated by their situation.\n\nGuidance-Oriented: Provide a simple, actionable CTA (link to help article, book a call, quick tutorial, etc.).\n\nConversational Tone: Human, approachable, and empathetic—avoid robotic or marketing-heavy language.\n\nConcise: Keep the email focused, short, and respectful of the customer’s time.\n\nConstraints\n\nAvoid accusatory phrasing. Use positive framing (e.g., “We’d love to help you get even more from [Product Name]” instead of “You’re not using it enough”).\n\nNever push a hard sell. The goal is long-term retention.\n\nPersonalize with customer name, company name, product name, and churn situation.\n\nDo not hallucinate\n\nStructure each output with:\n\nSubject line (friendly, contextual, motivating)\n\nBody (personalized, empathetic, value-driven)\n\nCTA (simple and clear)\n\nClosing (warm, signed from Addressable team or a named rep)."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        1456,
+        -128
+      ],
+      "id": "9d4b479c-1b71-4b1d-b137-69f2ea85bcbd",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1520,
+        128
+      ],
+      "id": "cd05f0c6-cd0e-4540-91dd-21c54eee03e6",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "sendTo": "customer_email_address",
+        "subject": "={{ $json.Subject }}",
+        "message": "={{ $json.Body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2032,
+        0
+      ],
+      "id": "f17705cb-58f3-440e-92d3-6ed20a32a231",
+      "name": "Send a message1",
+      "webhookId": "<REDACTED_WEBHOOK>"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2480,
+        128
+      ],
+      "id": "bd88aedb-a7e1-4dd0-8051-7ea6fed2e044",
+      "name": "Wait1",
+      "webhookId": "<REDACTED_WEBHOOK>"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = items[0].json.output;\n\nconst [subjectLine, ...rest] = input.split('\\n');\n\nconst subject = subjectLine.replace(/^Subject:\\s*/, '').trim();\n\nlet body = rest.join('\\n').trim()\n  .replace(/\\n{2,}/g, '</p><p>')\n  .replace(/\\n/g, '<br>');\n\nbody = `<p>${body}</p>`;\n\nreturn [\n  {\n    json: {\n      Subject: subject,\n      Body: body,\n    },\n  },\n];\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1808,
+        0
+      ],
+      "id": "21f6d9a4-f11c-4c3a-8187-822684e2875d",
+      "name": "Parse AI Output"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "<REDACTED_WEBHOOK_PATH>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        368,
+        224
+      ],
+      "id": "4346e4cb-7856-4866-90ed-ef628566e6a2",
+      "name": "Webhook",
+      "webhookId": "<REDACTED_WEBHOOK>"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "Reachout",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "ID",
+              "condition": "eq",
+              "keyValue": "={{ $('Split Out').item.json.customer_id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "Status",
+              "fieldValue": "={{ $json.labelIds[1] }}"
+            },
+            {
+              "fieldId": "Read status",
+              "fieldValue": "={{ $json.labelIds[0] }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2256,
+        0
+      ],
+      "id": "d7455e9a-9569-41c2-a805-3c2e41f9dedb",
+      "name": "Update a row"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body.selected_customers",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        576,
+        224
+      ],
+      "id": "df879f10-589c-405f-bed0-7f3f0ae16262",
+      "name": "Split Out"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Parse AI Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        [
+          {
+            "node": "Update a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse AI Output": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a row": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "tags": [
+    {
+      "createdAt": "2025-09-04T15:43:08.576Z",
+      "updatedAt": "2025-09-04T15:43:08.576Z",
+      "id": "pl4v02guVZklTJcm",
+      "name": "Lovable"
+    },
+    {
+      "createdAt": "2025-09-04T15:43:34.636Z",
+      "updatedAt": "2025-09-04T15:43:34.636Z",
+      "id": "rsNzzwIfXEndQw7N",
+      "name": "Off-platform Missing"
+    },
+    {
+      "createdAt": "2025-09-04T15:42:53.597Z",
+      "updatedAt": "2025-09-04T15:42:53.597Z",
+      "id": "xnXCkpnCqgjlrWet",
+      "name": "supabase"
+    }
+  ]
+}
